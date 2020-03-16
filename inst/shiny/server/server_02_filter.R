@@ -108,18 +108,18 @@ observeEvent(input$filter_reset_btn,{
 
 ## Plots
 output$filter_summary_top_plot <- renderPlotly({
-    p <- filter_summary_top(MAE = vals$MAE,
-                            samples_discard = c(),
-                            filter_type = input$filter_type,
-                            sample_condition = input$filter_type_metadata)
+    p <- filter_summary_bar_density(MAE = vals$MAE,
+                                    samples_discard = c(),
+                                    filter_type = input$filter_type,
+                                    sample_condition = input$filter_type_metadata)
     return(p)
 })
 
 output$filter_summary_bottom_plot <- renderPlotly({
-    p <- filter_summary_bottom(MAE = vals$MAE,
-                               samples_discard = c(),
-                               filter_type = input$filter_type,
-                               sample_condition = input$filter_type_metadata)
+    p <- filter_summary_pie_box(MAE = vals$MAE,
+                                samples_discard = c(),
+                                filter_type = input$filter_type,
+                                sample_condition = input$filter_type_metadata)
     return(p)
 })
 
@@ -156,6 +156,12 @@ output$download_rds <- downloadHandler(filename = function() {
   paste("animalcules_data_", Sys.Date(), ".rds", sep="")
 }, content = function(file) {
   saveRDS(vals$MAE, file=file)
+})
+
+output$download_biom <- downloadHandler(filename = function() {
+  paste("animalcules_data_", Sys.Date(), ".biom", sep="")
+}, content = function(file) {
+  write_to_biom(vals$MAE, path_to_output=file)
 })
 
 

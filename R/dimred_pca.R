@@ -65,8 +65,8 @@ dimred_pca <- function(MAE,
             } %>%
             # Fix constant/zero row
             {
-                if (sum(rowSums(as.matrix(.)) == 0) > 0){
-                . <- .[-which(rowSums(as.matrix(.)) == 0),]
+                if (sum(base::rowSums(as.matrix(.)) == 0) > 0){
+                . <- .[-which(base::rowSums(as.matrix(.)) == 0),]
             } else {
                 .
             }
@@ -137,8 +137,10 @@ dimred_pca <- function(MAE,
 
     # Formatting importance table
     colnames(df.imp) = c("Standard Deviation",
-                        "Variance Explained",
-                        "Cumulative Variance")
+                         "Variance Explained",
+                         "Cumulative Variance")
+
+    df.imp[,"Standard Deviation"] <- signif(df.imp[,"Standard Deviation"], 3)
 
     # Show variance as a percentage
     df.imp[,2] <- scales::percent(as.numeric(df.imp[,2]))

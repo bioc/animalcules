@@ -1,11 +1,11 @@
 ## animalcules <img src="https://github.com/compbiomed/materials/blob/master/animalcules/animalcules_logo.png?raw=true" align="right" width="170" />
 
 
-[![](https://img.shields.io/badge/bioconductor-3.9-3a6378.svg)](https://doi.org/doi:10.18129/B9.bioc.animalcules)
+[![](https://img.shields.io/badge/bioconductor-3.10-3a6378.svg)](https://doi.org/doi:10.18129/B9.bioc.animalcules)
 [![](https://img.shields.io/badge/platforms-linux%20%7C%20osx%20%7C%20win-2a89a1.svg)](https://bioconductor.org/checkResults/3.9/bioc-LATEST/animalcules/)
 [![](https://img.shields.io/github/last-commit/compbiomed/animalcules.svg)](https://github.com/compbiomed/animalcules/commits/master)
 [![](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
-[![](https://bioconductor.org/shields/build/devel/bioc/animalcules.svg)](https://bioconductor.org/checkResults/devel/bioc-LATEST/animalcules/)
+[![](https://bioconductor.org/shields/build/release/bioc/animalcules.svg)](http://bioconductor.org/checkResults/release/bioc-LATEST/animalcules/)
 
 ## What does animalcules do?
 
@@ -19,9 +19,29 @@ Traditional microbiome analysis such as alpha/beta diversity and differential ab
 
 Please check our website at https://compbiomed.github.io/animalcules-docs/
 
+
+## Before Installation
+
+* Make sure R version is >= 3.6.0 and Bioconductor version is 3.10. Bioconductor could be updated by :
+
+``` r
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install(version = "3.10")
+```
+
 ## Installation
 
-* Install the development version of the package from Bioconductor
+
+* Install the development version of the package from Github 
+
+``` r
+if (!requireNamespace("devtools", quietly=TRUE))
+  install.packages("devtools")
+devtools::install_github("compbiomed/animalcules")
+```
+
+* Install the release version of the package from Bioconductor
 
 ``` r
 if (!requireNamespace("BiocManager", quietly=TRUE))
@@ -30,13 +50,7 @@ BiocManager::install("compbiomed/animalcules")
 
 ```
 
-* Install the development version of the package from Github
 
-``` r
-if (!requireNamespace("devtools", quietly=TRUE))
-  install.packages("devtools")
-devtools::install_github("compbiomed/animalcules")
-```
 
 ## Run animalcules shiny app
 
