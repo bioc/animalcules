@@ -11,18 +11,18 @@
 #' @importFrom utils read.table
 #' @export
 
-read_pathoscope_data <- function(input_dir = ".", 
-                                 pathoreport_file_suffix = "-sam-report.tsv", 
-                                 use.input.files = FALSE, 
-                                 input.files.path.vec = NULL, 
+read_pathoscope_data <- function(input_dir = ".",
+                                 pathoreport_file_suffix = "-sam-report.tsv",
+                                 use.input.files = FALSE,
+                                 input.files.path.vec = NULL,
                                  input.files.name.vec = NULL) {
     if (use.input.files == FALSE) {
         if (input_dir == ".") {
             input_dir <- getwd()
         }
         pattern <- paste("*", pathoreport_file_suffix, sep = "")
-        filenames <- list.files(input_dir, 
-                                pattern = pattern, 
+        filenames <- list.files(input_dir,
+                                pattern = pattern,
                                 full.names = TRUE)
         input.files.name.vec <- list.files(input_dir)
     } else {
@@ -32,7 +32,7 @@ read_pathoscope_data <- function(input_dir = ".",
             header = TRUE, sep = "\t", nrow = 100,
             comment.char = "", check.names = FALSE)
     lgenomes <- lapply(ltbl, function(tbl) {
-        return(levels(tbl[, 1]))
+        return((tbl[, 1]))
     })
     genomes <- unique(unlist(lgenomes))
     # genomes <- c(genomes, 'others')
@@ -44,7 +44,7 @@ read_pathoscope_data <- function(input_dir = ".",
         return(strsplit(x, "-sam-report.tsv")[[1]])
     }))
     # print(samplenames)
-    countdat <- matrix(0L, 
+    countdat <- matrix(0L,
     nrow = length(genomes), ncol = length(samplenames))
     for (i in seq(length(samplenames))) {
         index.tmp <- match(ltbl[[i]][, 1], genomes)
