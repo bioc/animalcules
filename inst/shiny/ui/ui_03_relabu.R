@@ -22,40 +22,21 @@ tabPanel("Abundance",
 
           # Sort the bars
           radioButtons("relabu_bar_sort", "Sort By", c("No Sorting" = "nosort",
-                                                           "Conditions" = "conditions",
-                                                           "Organisms"  = "organisms"),
-                                                           selected     = "nosort"),
+                                                       "Conditions" = "conditions",
+                                                       "Organisms" = "organisms",
+                                                       "Alphabetically" = "alphabetically"),
+                                                        selected = "nosort"),
 
           # Advanced options
           checkboxInput("relabu_bar_adv", "Advanced Options"),
 
           # Isolate samples
           conditionalPanel(
-            condition = "input.relabu_bar_adv == true",
-            selectizeInput("relabu_bar_sample_iso", "Isolate Samples", choices=sam.name, multiple=TRUE)
-          ),
-
-          # Discard samples
-          conditionalPanel(
-            condition = "input.relabu_bar_adv == true",
-            selectizeInput("relabu_bar_sample_dis", "Discard Samples", choices=sam.name, multiple=TRUE)
-          ),
-
-          # Dynamically generate based on tax level
-          conditionalPanel(
-            condition = "input.relabu_bar_adv == true",
-            uiOutput("relabu_bar_org_order")
-          ),
-
-          # Legend toggle
-          conditionalPanel(
-            condition = "input.relabu_bar_adv == true",
-            checkboxInput("relabu_bar_legend", "Show Legend", value=TRUE)
-          ),
-
-          # Adjust height of plot
-          conditionalPanel(
-            condition = "input.relabu_bar_adv == true",
+            condition = "input.relabu_bar_adv == true | input.global_adv == true",
+            selectizeInput("relabu_bar_sample_iso", "Isolate Samples", choices=sam.name, multiple=TRUE),
+            selectizeInput("relabu_bar_sample_dis", "Discard Samples", choices=sam.name, multiple=TRUE),
+            uiOutput("relabu_bar_org_order"),
+            checkboxInput("relabu_bar_legend", "Show Legend", value=TRUE),
             sliderInput("relabu_bar_height", "Plot Height", 400, 1200, value=600, step=50, post="px"),
             sliderInput("relabu_bar_width", "Plot Width", 400, 1200, value=800, step=50, post="px")
           ),
@@ -86,41 +67,20 @@ tabPanel("Abundance",
           # Column sort
           radioButtons("relabu_heatmap_sort", "Sort By", c("No Sorting" = "nosort",
                                                            "Conditions" = "conditions",
-                                                           "Organisms"  = "organisms"),
-                                                           selected     = "nosort"),
+                                                           "Organisms" = "organisms",
+                                                           "Alphabetically" = "alphabetically"),
+                                                           selected = "nosort"),
 
           # Advanced options
           checkboxInput("relabu_heatmap_adv", "Advanced Options"),
 
           # Dynamically generate based on tax level
           conditionalPanel(
-            condition = "input.relabu_heatmap_adv == true",
-            uiOutput("relabu_heatmap_org_iso")
-
-          ),
-
-          # Isolate samples
-          conditionalPanel(
-            condition = "input.relabu_heatmap_adv == true",
-            selectizeInput("relabu_heatmap_sample_iso", "Isolate Samples", choices=sam.name, multiple=TRUE)
-
-          ),
-
-          # Discard samples
-          conditionalPanel(
-            condition = "input.relabu_heatmap_adv == true",
-            selectizeInput("relabu_heatmap_sample_dis", "Discard Samples", choices=sam.name, multiple=TRUE)
-          ),
-
-          # Optional logcpm
-          conditionalPanel(
-            condition = "input.relabu_heatmap_adv == true",
-            checkboxInput("relabu_heatmap_logcpm", "log(CPM)", value=TRUE)
-          ),
-
-          # Adjust height of plot
-          conditionalPanel(
-            condition = "input.relabu_heatmap_adv == true",
+            condition = "input.relabu_heatmap_adv == true | input.global_adv == true",
+            uiOutput("relabu_heatmap_org_iso"),
+            selectizeInput("relabu_heatmap_sample_iso", "Isolate Samples", choices=sam.name, multiple=TRUE),
+            selectizeInput("relabu_heatmap_sample_dis", "Discard Samples", choices=sam.name, multiple=TRUE),
+            checkboxInput("relabu_heatmap_logcpm", "log(CPM)", value=TRUE),
             sliderInput("relabu_heatmap_height", "Plot Height", 400, 1200, value=600, step=50, post="px"),
             sliderInput("relabu_heatmap_width", "Plot Width", 600, 1000, value=800, step=50, post="px")
           ),
@@ -164,7 +124,7 @@ tabPanel("Abundance",
 
           # Adjust height of plot
           conditionalPanel(
-            condition = "input.relabu_box_adv == true",
+            condition = "input.relabu_box_adv == true | input.global_adv == true",
             sliderInput("relabu_box_height", "Plot Height", 200, 1000, value=400, step=50, post="px"),
             sliderInput("relabu_box_width", "Plot Width", 600, 1400, value=1000, step=50, post="px")
           ),

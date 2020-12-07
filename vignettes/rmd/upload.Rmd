@@ -7,11 +7,12 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-There are 7 data upload methods:
+There are 8 data upload methods:
 
 * Count File (Mostly used for uploading new dataset)
 * Example Data (For exploring animalcules)
 * animalcules file (Re-upload previously uploaded dataset quickly)
+* phyloseq object
 * BIOM file
 * Count file with taxonomy id (this is the option if taxonomy table is not available)
 * Pathoscope File 
@@ -33,6 +34,12 @@ Make sure:
 * All three files have the same format as seen in the example below:
 
 <img src="https://github.com/compbiomed/materials/blob/master/animalcules/count2.PNG?raw=true" width="1200">
+
+Example files:
+
+* Counts file: https://github.com/compbiomed/animalcules-docs/blob/master/example_data/count_example.csv
+* Taxonomy file: https://github.com/compbiomed/animalcules-docs/blob/master/example_data/taxonomy_table.csv
+* Annotation file: https://github.com/compbiomed/animalcules-docs/blob/master/example_data/annotation_example.csv
 
 Instructions: 
 
@@ -70,6 +77,43 @@ In animalcules, users could choose to save their dataset to a .rds file in the T
 Running time: < 0.5s
 
 <img src="https://github.com/compbiomed/materials/blob/master/animalcules/animalcules_file.PNG?raw=true" width="500">
+
+
+### Phyloseq object
+
+Phyloseq object can be easily read into animalcules with the following steps. Suppose the phyloseq object in R is called 'physeq'. First, write count table, taxonomy table, and sample data table to csv files:
+
+```{r eval = FALSE}
+library(phyloseq)
+write.csv(otu_table(physeq), "count.csv")
+write.csv(tax_table(physeq), "tax.csv")
+write.csv(sample_data(physeq), "sample.csv")
+
+```
+
+Then, follow the same 'count file' upload steps as shown above with the three csv files. 
+
+To generate a phyloseq object from the animalcules MAE object is also very simple:
+
+```{r eval = FALSE}
+library("phyloseq")
+
+# Extract data
+microbe <- MAE[["MicrobeGenetics"]] 
+
+# host <- MAE[['HostGenetics']]
+tax_table <- as.matrix(as.data.frame(rowData(microbe)))  # organism x taxlev
+sam_table <- as.data.frame(colData(microbe)) # sample x condition
+counts_table <- as.matrix(as.data.frame(assays(microbe))[, rownames(sam_table)])  # organism x sample
+
+# build phyloseq objecy
+OTU = otu_table(counts_table, taxa_are_rows = TRUE)
+TAX = tax_table(tax_table)
+SAM = sample_data(sam_table)
+physeq = phyloseq(OTU, TAX, SAM)
+    
+```
+
 
 
 ### Biom file

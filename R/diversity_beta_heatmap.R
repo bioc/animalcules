@@ -22,14 +22,16 @@
 #' @import magrittr
 #' @import reshape2
 #' @import MultiAssayExperiment
+#' @import ape
+#' @import GUniFrac
 #' @export
 
 diversity_beta_heatmap <- function(MAE,
-                                    tax_level,
-                                    input_beta_method,
-                                    input_bdhm_select_conditions,
-                                    input_bdhm_sort_by = 
-                                    c("nosort", "conditions")){
+                                   tax_level,
+                                   input_beta_method,
+                                   input_bdhm_select_conditions,
+                                   input_bdhm_sort_by = 
+                                   c("nosort", "conditions")){
 
     # Extract data
     microbe <- MAE[['MicrobeGenetics']] #double bracket subsetting is easier
@@ -44,10 +46,46 @@ diversity_beta_heatmap <- function(MAE,
         # Sum counts by taxon level
         upsample_counts(tax_table, tax_level)
 
+    # change tax table size
+    tax_table <- tax_table[,1:which(colnames(tax_table) %in% tax_level)]
+    
+    # generate beta diversity
+    if (input_beta_method %in% c("bray", "jaccard")){
+        # Then use vegdist from vegan to generate a bray distance object:
+        dist.mat <- vegan::vegdist(t(counts_table), method = input_beta_method)
+        dist.mat <- as.matrix(dist.mat)        
+    } else {
+            # unifrac
+        # factorize each column
+        tax_table[sapply(tax_table, is.character)] <- lapply(tax_table[sapply(tax_table, is.character)], 
+                                               as.factor)
+        # create formula
+        frm = as.formula(paste0("~", paste(colnames(tax_table), collapse ="/")))
+        
+        # create phylo object
+        tr <- suppressWarnings(as.phylo(frm, data = tax_table))
+        
+        # add branch length
+        tr <- suppressWarnings(compute.brlen(tr))
+        
+        # root phylo
+        tr <- suppressWarnings(root(tr,1,resolve.root = TRUE))
+        
+        # count table
+        ct_table <- as.data.frame(t(counts_table))
+        ct_table[sapply(ct_table, is.numeric)] <- lapply(ct_table[sapply(ct_table, is.numeric)], 
+                                               as.integer)
+        
+        unifracs <- suppressWarnings(GUniFrac(ct_table,tr)$unifracs)
+        dw <- unifracs[, , "d_1"]		# Weighted UniFrac
+        du <- unifracs[, , "d_UW"]		# Unweighted UniFrac	
+        if (input_beta_method == 'unweighted unifrac'){
+            dist.mat <- du
+        } else {
+            dist.mat <- dw
+        }
+    }
 
-    #Then use vegdist from vegan to generate a bray distance object:
-    dist.mat <- vegan::vegdist(t(counts_table), method = input_beta_method)
-    dist.mat <- as.matrix(dist.mat)
     dist.mat <- 
     dist.mat[order(match(rownames(dist.mat), 
     rev(rownames(dist.mat)))),,drop=FALSE]
@@ -73,6 +111,7 @@ diversity_beta_heatmap <- function(MAE,
     }
 
     m <- data.matrix(dist.mat)
+    title <- paste(tax_level, " (", input_beta_method, ")", sep="")
     hover.txt <- c()
     for (i in seq_len(ncol(dist.mat))) {
     hover.txt <- cbind(hover.txt, dist.mat[[i]])
@@ -81,7 +120,7 @@ diversity_beta_heatmap <- function(MAE,
                     type = "heatmap",
                     colors= "RdPu",
                     hoverinfo = "x+y+z") %>%
-    layout(xaxis = list(showticklabels = FALSE, 
+    layout(title = title, xaxis = list(showticklabels = FALSE, 
     title = "", ticks = "", tickangle = -45),
     yaxis = list(showticklabels = FALSE, type = 'category', ticks = ""))
 
@@ -123,10 +162,13 @@ diversity_beta_heatmap <- function(MAE,
                         hoverinfo = "x+y+text",
                         transpose=FALSE,
                         text=t(hover.txt)) %>%
-        layout(xaxis = list(showticklabels = FALSE, type = 'category',
-                    ticks = "", autorange="reversed"),
-            yaxis = list(title = "", tickangle = -45),
-            orientation=TRUE)
+        layout(xaxis = list(showticklabels = FALSE, 
+                            type = 'category',
+                            ticks = "", 
+                            autorange="reversed"),
+               yaxis = list(title = "", 
+                            tickangle = -45),
+               orientation = TRUE)
     }
 
     empty <- plotly_empty(type = "scatter")
