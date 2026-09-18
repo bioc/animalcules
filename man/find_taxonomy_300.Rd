@@ -16,6 +16,8 @@ taxondata Data with the taxonomy information
 Find the taxonomy for maximum 300 tids
 }
 \examples{
+\donttest{
 taxonLevels <- find_taxonomy_300(tids = 1200)
+}
 
 }

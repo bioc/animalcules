@@ -1,6 +1,6 @@
 Package: animalcules
 Title: Interactive microbiome analysis toolkit
-Version: 1.29.0
+Version: 1.29.1
 Authors@R: c(person(given=c("W.", "Evan"), family="Johnson", email="wej@bu.edu",
                 role=c("aut", "cre"),
                 comment = c(ORCID = "0000-0002-6247-6595")),
@@ -65,6 +65,7 @@ Imports:
 Suggests:
     BiocStyle,
     biomformat,
+    curl,
     devtools,
     glmnet,
     knitr,
@@ -76,4 +77,4 @@ VignetteBuilder:
 biocViews: Microbiome, Metagenomics, Coverage, Visualization
 Encoding: UTF-8
 LazyData: false
-RoxygenNote: 7.3.0
+Config/roxygen2/version: 8.0.0

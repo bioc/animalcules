@@ -17,13 +17,18 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Jessica McClintock \email{jessica.mcclintock@rutgers.edu}
+\strong{Maintainer}: W. Evan Johnson \email{wej@bu.edu} (\href{https://orcid.org/0000-0002-6247-6595}{ORCID})
 
 Authors:
 \itemize{
+  \item W. Evan Johnson \email{wej@bu.edu} (\href{https://orcid.org/0000-0002-6247-6595}{ORCID})
   \item Yue Zhao \email{yuezh@bu.edu} (\href{https://orcid.org/0000-0001-5257-5103}{ORCID})
   \item Anthony Federico \email{anfed@bu.edu} (\href{https://orcid.org/0000-0002-9200-1689}{ORCID})
-  \item W. Evan Johnson \email{wej@bu.edu} (\href{https://orcid.org/0000-0002-6247-6595}{ORCID})
+}
+
+Other contributors:
+\itemize{
+  \item Jessica Anderson \email{anderson.jessica@rutgers.edu} (\href{https://orcid.org/0000-0002-0542-9872}{ORCID}) [contractor]
 }
 
 }

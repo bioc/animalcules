@@ -4,7 +4,9 @@
 #' @return A list of taxon levels with information
 #'
 #' @examples
+#' \donttest{
 #' taxonLevels <- find_taxonomy(tids = 1200)
+#' }
 #'
 #' @import rentrez
 

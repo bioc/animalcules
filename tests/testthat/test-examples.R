@@ -283,8 +283,30 @@ test_that("grep_tid() is working", {
 
 # find_taxonomy
 test_that("find_taxonomy() is working", {
-  p <- find_taxonomy(1200)
+  skip_if_not_installed("curl")
+  skip_if(is.null(curl::nslookup("eutils.ncbi.nlm.nih.gov", error = FALSE)),
+    "NCBI Entrez host not reachable")
+  # NCBI Entrez can be unavailable or rate-limited on the build machines;
+  # skip rather than fail when the service cannot be reached
+  p <- tryCatch(find_taxonomy(1200), error = function(e) {
+    skip(paste("NCBI Entrez unavailable:", conditionMessage(e)))
+  })
   expect_equal(p$Taxon$Taxon$TaxId, "131567")
+})
+
+test_that("find_taxon_mat() works without network access", {
+  taxonLevels <- list(list(
+    Taxon = list(TaxId = "2", ScientificName = "Bacteria", Rank = "domain"),
+    Taxon = list(TaxId = "1224", ScientificName = "Pseudomonadota",
+      Rank = "phylum"),
+    Taxon = list(TaxId = "570", ScientificName = "Klebsiella", Rank = "genus")
+  ))
+  p <- find_taxon_mat("ti|573", taxonLevels)
+  expect_equal(rownames(p), "ti|573")
+  expect_equal(unname(p[1, "superkingdom"]), "Bacteria")
+  expect_equal(unname(p[1, "phylum"]), "Pseudomonadota")
+  expect_equal(unname(p[1, "genus"]), "Klebsiella")
+  expect_equal(unname(p[1, "species"]), "others")
 })
 
 # diversities

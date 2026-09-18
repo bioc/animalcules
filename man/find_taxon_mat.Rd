@@ -18,9 +18,21 @@ taxmat Taxonomy Information Matrix
 Find the Taxonomy Information Matrix
 }
 \examples{
+# Lineage information in the format returned by find_taxonomy(),
+# constructed here so the example does not require network access
+taxonLevels <- list(list(
+    Taxon = list(TaxId = "2", ScientificName = "Bacteria", Rank = "domain"),
+    Taxon = list(TaxId = "1224", ScientificName = "Pseudomonadota",
+        Rank = "phylum"),
+    Taxon = list(TaxId = "570", ScientificName = "Klebsiella", Rank = "genus")
+))
+tax_table <- find_taxon_mat("ti|573", taxonLevels)
+
+\donttest{
 ids <- c("ti|54005", "ti|73001", "ti|573", "ti|228277", "ti|53458")
 tids <- c("54005", "73001", "573", "228277", "53458")
 taxonLevels <- find_taxonomy(tids)
 tax_table <- find_taxon_mat(ids, taxonLevels)
+}
 
 }

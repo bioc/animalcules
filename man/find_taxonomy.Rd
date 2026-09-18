@@ -16,6 +16,8 @@ A list of taxon levels with information
 Find the taxonomy for unlimited tids
 }
 \examples{
+\donttest{
 taxonLevels <- find_taxonomy(tids = 1200)
+}
 
 }

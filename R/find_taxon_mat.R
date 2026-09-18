@@ -5,10 +5,22 @@
 #' @return taxmat Taxonomy Information Matrix
 #'
 #' @examples
+#' # Lineage information in the format returned by find_taxonomy(),
+#' # constructed here so the example does not require network access
+#' taxonLevels <- list(list(
+#'     Taxon = list(TaxId = "2", ScientificName = "Bacteria", Rank = "domain"),
+#'     Taxon = list(TaxId = "1224", ScientificName = "Pseudomonadota",
+#'         Rank = "phylum"),
+#'     Taxon = list(TaxId = "570", ScientificName = "Klebsiella", Rank = "genus")
+#' ))
+#' tax_table <- find_taxon_mat("ti|573", taxonLevels)
+#'
+#' \donttest{
 #' ids <- c("ti|54005", "ti|73001", "ti|573", "ti|228277", "ti|53458")
 #' tids <- c("54005", "73001", "573", "228277", "53458")
 #' taxonLevels <- find_taxonomy(tids)
 #' tax_table <- find_taxon_mat(ids, taxonLevels)
+#' }
 #'
 #' @export
 
@@ -32,6 +44,10 @@ find_taxon_mat <- function(names, taxonLevels) {
             rank <- tLineageEx[[j]]["Rank"]
             # taxid <- tLineageEx[[j]]["TaxId"]
             scientificName <- tLineageEx[[j]]["ScientificName"]
+            # NCBI Taxonomy renamed the 'superkingdom' rank to 'domain'
+            if (!is.null(rank) && identical(as.character(rank), "domain")) {
+                rank <- "superkingdom"
+            }
             if (!is.null(rank) && !is.na(rank) && rank %in% tax.name) {
                 # taxrow[as.character(rank)] <- as.character(taxid)
                 taxrow[as.character(rank)] <- as.character(scientificName)
